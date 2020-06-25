@@ -11,7 +11,12 @@ import voluptuous as vol
 
 from homeassistant.components import sun
 from homeassistant.components.http import HomeAssistantView
-from homeassistant.components.recorder.models import Events, States, process_timestamp
+from homeassistant.components.recorder.models import (
+    Events,
+    States,
+    process_timestamp,
+    process_timestamp_to_utc_isoformat,
+)
 from homeassistant.components.recorder.util import (
     QUERY_RETRY_WAIT,
     RETRIES,
@@ -22,7 +27,6 @@ from homeassistant.const import (
     ATTR_DOMAIN,
     ATTR_ENTITY_ID,
     ATTR_FRIENDLY_NAME,
-    ATTR_HIDDEN,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     CONF_EXCLUDE,
@@ -38,7 +42,11 @@ from homeassistant.const import (
 )
 from homeassistant.core import DOMAIN as HA_DOMAIN, callback, split_entity_id
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entityfilter import generate_filter
+from homeassistant.helpers.entityfilter import (
+    INCLUDE_EXCLUDE_BASE_FILTER_SCHEMA,
+    convert_include_exclude_filter,
+    generate_filter,
+)
 from homeassistant.loader import bind_hass
 import homeassistant.util.dt as dt_util
 
@@ -55,31 +63,8 @@ DOMAIN = "logbook"
 GROUP_BY_MINUTES = 15
 
 EMPTY_JSON_OBJECT = "{}"
-
 CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                CONF_EXCLUDE: vol.Schema(
-                    {
-                        vol.Optional(CONF_ENTITIES, default=[]): cv.entity_ids,
-                        vol.Optional(CONF_DOMAINS, default=[]): vol.All(
-                            cv.ensure_list, [cv.string]
-                        ),
-                    }
-                ),
-                CONF_INCLUDE: vol.Schema(
-                    {
-                        vol.Optional(CONF_ENTITIES, default=[]): cv.entity_ids,
-                        vol.Optional(CONF_DOMAINS, default=[]): vol.All(
-                            cv.ensure_list, [cv.string]
-                        ),
-                    }
-                ),
-            }
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
+    {DOMAIN: INCLUDE_EXCLUDE_BASE_FILTER_SCHEMA}, extra=vol.ALLOW_EXTRA
 )
 
 HOMEASSISTANT_EVENTS = [
@@ -125,7 +110,6 @@ def async_describe_event(hass, domain, event_name, describe_callback):
 
 async def async_setup(hass, config):
     """Logbook setup."""
-
     hass.data.setdefault(DOMAIN, {})
 
     @callback
@@ -248,7 +232,7 @@ def humanify(hass, events, entity_attr_cache, prev_states=None):
             if event.event_type in external_events:
                 domain, describe_event = external_events[event.event_type]
                 data = describe_event(event)
-                data["when"] = event.time_fired
+                data["when"] = event.time_fired_isoformat
                 data["domain"] = domain
                 data["context_user_id"] = event.context_user_id
                 yield data
@@ -275,7 +259,7 @@ def humanify(hass, events, entity_attr_cache, prev_states=None):
                 ) or split_entity_id(entity_id)[1].replace("_", " ")
 
                 yield {
-                    "when": event.time_fired,
+                    "when": event.time_fired_isoformat,
                     "name": name,
                     "message": _entry_message_from_event(
                         hass, entity_id, domain, event, entity_attr_cache
@@ -290,7 +274,7 @@ def humanify(hass, events, entity_attr_cache, prev_states=None):
                     continue
 
                 yield {
-                    "when": event.time_fired,
+                    "when": event.time_fired_isoformat,
                     "name": "Home Assistant",
                     "message": "started",
                     "domain": HA_DOMAIN,
@@ -304,7 +288,7 @@ def humanify(hass, events, entity_attr_cache, prev_states=None):
                     action = "stopped"
 
                 yield {
-                    "when": event.time_fired,
+                    "when": event.time_fired_isoformat,
                     "name": "Home Assistant",
                     "message": action,
                     "domain": HA_DOMAIN,
@@ -322,7 +306,7 @@ def humanify(hass, events, entity_attr_cache, prev_states=None):
                         pass
 
                 yield {
-                    "when": event.time_fired,
+                    "when": event.time_fired_isoformat,
                     "name": event_data.get(ATTR_NAME),
                     "message": event_data.get(ATTR_MESSAGE),
                     "domain": domain,
@@ -356,26 +340,6 @@ def _get_related_entity_ids(session, entity_filter):
             time.sleep(QUERY_RETRY_WAIT)
 
 
-def _generate_filter_from_config(config):
-    excluded_entities = []
-    excluded_domains = []
-    included_entities = []
-    included_domains = []
-
-    exclude = config.get(CONF_EXCLUDE)
-    if exclude:
-        excluded_entities = exclude.get(CONF_ENTITIES, [])
-        excluded_domains = exclude.get(CONF_DOMAINS, [])
-    include = config.get(CONF_INCLUDE)
-    if include:
-        included_entities = include.get(CONF_ENTITIES, [])
-        included_domains = include.get(CONF_DOMAINS, [])
-
-    return generate_filter(
-        included_domains, included_entities, excluded_domains, excluded_entities
-    )
-
-
 def _all_entities_filter(_):
     """Filter that accepts all entities."""
     return True
@@ -383,7 +347,6 @@ def _all_entities_filter(_):
 
 def _get_events(hass, config, start_day, end_day, entity_id=None):
     """Get events for a period of time."""
-
     entity_attr_cache = EntityAttributeCache(hass)
 
     def yield_events(query):
@@ -398,7 +361,7 @@ def _get_events(hass, config, start_day, end_day, entity_id=None):
             entity_ids = [entity_id.lower()]
             entities_filter = generate_filter([], entity_ids, [], [])
         elif config.get(CONF_EXCLUDE) or config.get(CONF_INCLUDE):
-            entities_filter = _generate_filter_from_config(config)
+            entities_filter = convert_include_exclude_filter(config)
             entity_ids = _get_related_entity_ids(session, entities_filter)
         else:
             entities_filter = _all_entities_filter
@@ -474,10 +437,6 @@ def _keep_event(hass, event, entities_filter, entity_attr_cache):
         # Do not report on new entities
         # Do not report on entity removal
         if not event.has_old_and_new_state:
-            return False
-
-        # exclude entities which are customized hidden
-        if event.hidden:
             return False
 
         if event.domain in CONTINUOUS_DOMAINS and entity_attr_cache.get(
@@ -601,6 +560,7 @@ class LazyEventPartialState:
         "_row",
         "_event_data",
         "_time_fired",
+        "_time_fired_isoformat",
         "_attributes",
         "event_type",
         "entity_id",
@@ -613,6 +573,7 @@ class LazyEventPartialState:
         self._row = row
         self._event_data = None
         self._time_fired = None
+        self._time_fired_isoformat = None
         self._attributes = None
         self.event_type = self._row.event_type
         self.entity_id = self._row.entity_id
@@ -640,7 +601,6 @@ class LazyEventPartialState:
     @property
     def data(self):
         """Event data."""
-
         if not self._event_data:
             if self._row.event_data == EMPTY_JSON_OBJECT:
                 self._event_data = {}
@@ -663,9 +623,20 @@ class LazyEventPartialState:
         return self._time_fired
 
     @property
+    def time_fired_isoformat(self):
+        """Time event was fired in utc isoformat."""
+        if not self._time_fired_isoformat:
+            if self._time_fired:
+                self._time_fired_isoformat = self._time_fired.isoformat()
+            else:
+                self._time_fired_isoformat = process_timestamp_to_utc_isoformat(
+                    self._row.time_fired or dt_util.utcnow()
+                )
+        return self._time_fired_isoformat
+
+    @property
     def has_old_and_new_state(self):
         """Check the json data to see if new_state and old_state is present without decoding."""
-
         # Delete this check once all states are saved in the v8 schema
         # format or later (they have the old_state_id column).
 
@@ -678,13 +649,6 @@ class LazyEventPartialState:
             '"old_state": {' in self._row.event_data
             and '"new_state": {' in self._row.event_data
         )
-
-    @property
-    def hidden(self):
-        """Check the json to see if hidden."""
-        if '"hidden":' in self._row.attributes:
-            return self.attributes.get(ATTR_HIDDEN, False)
-        return False
 
 
 class EntityAttributeCache:

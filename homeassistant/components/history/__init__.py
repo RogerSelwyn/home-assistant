@@ -13,10 +13,13 @@ import voluptuous as vol
 
 from homeassistant.components import recorder
 from homeassistant.components.http import HomeAssistantView
-from homeassistant.components.recorder.models import States, process_timestamp
+from homeassistant.components.recorder.models import (
+    States,
+    process_timestamp,
+    process_timestamp_to_utc_isoformat,
+)
 from homeassistant.components.recorder.util import execute, session_scope
 from homeassistant.const import (
-    ATTR_HIDDEN,
     CONF_DOMAINS,
     CONF_ENTITIES,
     CONF_EXCLUDE,
@@ -37,18 +40,42 @@ CONF_ORDER = "use_include_order"
 STATE_KEY = "state"
 LAST_CHANGED_KEY = "last_changed"
 
-CONFIG_SCHEMA = vol.Schema(
+# Not reusing from entityfilter because history does not support glob filtering
+_FILTER_SCHEMA_INNER = vol.Schema(
     {
-        DOMAIN: recorder.FILTER_SCHEMA.extend(
-            {vol.Optional(CONF_ORDER, default=False): cv.boolean}
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
+        vol.Optional(CONF_DOMAINS, default=[]): vol.All(cv.ensure_list, [cv.string]),
+        vol.Optional(CONF_ENTITIES, default=[]): cv.entity_ids,
+    }
+)
+_FILTER_SCHEMA = vol.Schema(
+    {
+        vol.Optional(
+            CONF_INCLUDE, default=_FILTER_SCHEMA_INNER({})
+        ): _FILTER_SCHEMA_INNER,
+        vol.Optional(
+            CONF_EXCLUDE, default=_FILTER_SCHEMA_INNER({})
+        ): _FILTER_SCHEMA_INNER,
+        vol.Optional(CONF_ORDER, default=False): cv.boolean,
+    }
 )
 
-SIGNIFICANT_DOMAINS = ("climate", "device_tracker", "thermostat", "water_heater")
+CONFIG_SCHEMA = vol.Schema({DOMAIN: _FILTER_SCHEMA}, extra=vol.ALLOW_EXTRA)
+
+SIGNIFICANT_DOMAINS = (
+    "climate",
+    "device_tracker",
+    "humidifier",
+    "thermostat",
+    "water_heater",
+)
 IGNORE_DOMAINS = ("zone", "scene")
-NEED_ATTRIBUTE_DOMAINS = {"climate", "water_heater", "thermostat", "script"}
+NEED_ATTRIBUTE_DOMAINS = {
+    "climate",
+    "humidifier",
+    "script",
+    "thermostat",
+    "water_heater",
+}
 SCRIPT_DOMAIN = "script"
 ATTR_CAN_CANCEL = "can_cancel"
 
@@ -60,8 +87,6 @@ QUERY_STATES = [
     States.last_changed,
     States.last_updated,
     States.created,
-    States.context_id,
-    States.context_user_id,
 ]
 
 
@@ -130,7 +155,6 @@ def _get_significant_states(
 
 def state_changes_during_period(hass, start_time, end_time=None, entity_id=None):
     """Return states changes during UTC period start_time - end_time."""
-
     with session_scope(hass=hass) as session:
         query = session.query(*QUERY_STATES).filter(
             (States.last_changed == States.last_updated)
@@ -152,7 +176,6 @@ def state_changes_during_period(hass, start_time, end_time=None, entity_id=None)
 
 def get_last_state_changes(hass, number_of_states, entity_id):
     """Return the last number_of_states."""
-
     start_time = dt_util.utcnow()
 
     with session_scope(hass=hass) as session:
@@ -183,7 +206,6 @@ def get_last_state_changes(hass, number_of_states, entity_id):
 
 def get_states(hass, utc_point_in_time, entity_ids=None, run=None, filters=None):
     """Return the states at a specific point in time."""
-
     if run is None:
         run = recorder.run_information_from_instance(hass, utc_point_in_time)
 
@@ -214,7 +236,7 @@ def _get_states_with_session(
             .order_by(States.last_updated.desc())
             .limit(1)
         )
-        return _dbquery_to_non_hidden_states(query)
+        return [LazyState(row) for row in execute(query)]
 
     if run is None:
         run = recorder.run_information_with_session(session, utc_point_in_time)
@@ -262,16 +284,7 @@ def _get_states_with_session(
     if filters:
         query = filters.apply(query, entity_ids)
 
-    return _dbquery_to_non_hidden_states(query)
-
-
-def _dbquery_to_non_hidden_states(query):
-    """Return states that are not hidden."""
-    return [
-        state
-        for state in (LazyState(row) for row in execute(query))
-        if not state.hidden
-    ]
+    return [LazyState(row) for row in execute(query)]
 
 
 def _sorted_states_to_json(
@@ -318,7 +331,7 @@ def _sorted_states_to_json(
 
     # Called in a tight loop so cache the function
     # here
-    _process_timestamp = process_timestamp
+    _process_timestamp_to_utc_isoformat = process_timestamp_to_utc_isoformat
 
     # Append all changes to it
     for ent_id, group in groupby(states, lambda state: state.entity_id):
@@ -333,7 +346,6 @@ def _sorted_states_to_json(
                         domain != SCRIPT_DOMAIN
                         or native_state.attributes.get(ATTR_CAN_CANCEL)
                     )
-                    and not native_state.hidden
                 ]
             )
             continue
@@ -349,11 +361,6 @@ def _sorted_states_to_json(
         initial_state_count = len(ent_results)
 
         for db_state in group:
-            if ATTR_HIDDEN in db_state.attributes and LazyState(
-                db_state
-            ).attributes.get(ATTR_HIDDEN, False):
-                continue
-
             # With minimal response we do not care about attribute
             # changes so we can filter out duplicate states
             if db_state.state == prev_state.state:
@@ -362,9 +369,9 @@ def _sorted_states_to_json(
             ent_results.append(
                 {
                     STATE_KEY: db_state.state,
-                    LAST_CHANGED_KEY: _process_timestamp(
+                    LAST_CHANGED_KEY: _process_timestamp_to_utc_isoformat(
                         db_state.last_changed
-                    ).isoformat(),
+                    ),
                 }
             )
             prev_state = db_state
@@ -544,7 +551,6 @@ class Filters:
         * if include and exclude is defined - select the entities specified in
           the include and filter out the ones from the exclude list.
         """
-
         # specific entities requested - do not in/exclude anything
         if entity_ids is not None:
             return query.filter(States.entity_id.in_(entity_ids))
@@ -623,19 +629,10 @@ class LazyState(State):
         return self._attributes
 
     @property
-    def hidden(self):
-        """Determine if a state is hidden."""
-        if ATTR_HIDDEN not in self._row.attributes:
-            return False
-        return self.attributes.get(ATTR_HIDDEN, False)
-
-    @property
     def context(self):
         """State context."""
         if not self._context:
-            self._context = Context(
-                id=self._row.context_id, user_id=self._row.context_user_id
-            )
+            self._context = Context(id=None)
         return self._context
 
     @property  # type: ignore
@@ -669,5 +666,4 @@ class LazyState(State):
             and self.entity_id == other.entity_id
             and self.state == other.state
             and self.attributes == other.attributes
-            and self.context == other.context
         )

@@ -46,7 +46,6 @@ omit =
     homeassistant/components/android_ip_webcam/*
     homeassistant/components/anel_pwrctrl/switch.py
     homeassistant/components/anthemav/media_player.py
-    homeassistant/components/apache_kafka/*
     homeassistant/components/apcupsd/*
     homeassistant/components/apple_tv/*
     homeassistant/components/aqualogic/*
@@ -70,7 +69,6 @@ omit =
     homeassistant/components/avion/light.py
     homeassistant/components/avri/const.py
     homeassistant/components/avri/sensor.py
-    homeassistant/components/azure_event_hub/*
     homeassistant/components/azure_service_bus/*
     homeassistant/components/baidu/tts.py
     homeassistant/components/beewi_smartclim/sensor.py
@@ -265,7 +263,6 @@ omit =
     homeassistant/components/folder_watcher/*
     homeassistant/components/foobot/sensor.py
     homeassistant/components/fortios/device_tracker.py
-    homeassistant/components/fortigate/*
     homeassistant/components/foscam/camera.py
     homeassistant/components/foscam/const.py
     homeassistant/components/foursquare/*
@@ -444,7 +441,6 @@ omit =
     homeassistant/components/linux_battery/sensor.py
     homeassistant/components/lirc/*
     homeassistant/components/llamalab_automate/notify.py
-    homeassistant/components/lockitron/lock.py
     homeassistant/components/logi_circle/__init__.py
     homeassistant/components/logi_circle/camera.py
     homeassistant/components/logi_circle/const.py
@@ -730,6 +726,7 @@ omit =
     homeassistant/components/sma/sensor.py
     homeassistant/components/smappee/__init__.py
     homeassistant/components/smappee/api.py
+    homeassistant/components/smappee/binary_sensor.py
     homeassistant/components/smappee/sensor.py
     homeassistant/components/smappee/switch.py
     homeassistant/components/smarty/*
@@ -823,7 +820,16 @@ omit =
     homeassistant/components/todoist/const.py
     homeassistant/components/tof/sensor.py
     homeassistant/components/tomato/device_tracker.py
-    homeassistant/components/toon/*
+    homeassistant/components/toon/__init__.py
+    homeassistant/components/toon/binary_sensor.py
+    homeassistant/components/toon/climate.py
+    homeassistant/components/toon/const.py
+    homeassistant/components/toon/coordinator.py
+    homeassistant/components/toon/helpers.py
+    homeassistant/components/toon/models.py
+    homeassistant/components/toon/oauth2.py
+    homeassistant/components/toon/sensor.py
+    homeassistant/components/toon/switch.py
     homeassistant/components/torque/sensor.py
     homeassistant/components/totalconnect/*
     homeassistant/components/touchline/climate.py

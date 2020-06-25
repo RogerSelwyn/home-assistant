@@ -44,7 +44,7 @@ Mastodon.py==1.5.1
 OPi.GPIO==0.4.0
 
 # homeassistant.components.plugwise
-Plugwise_Smile==0.2.13
+Plugwise_Smile==1.1.0
 
 # homeassistant.components.essent
 PyEssent==0.13
@@ -306,7 +306,7 @@ avea==1.4
 avri-api==0.1.7
 
 # homeassistant.components.axis
-axis==32
+axis==33
 
 # homeassistant.components.azure_event_hub
 azure-eventhub==5.1.0
@@ -711,10 +711,7 @@ habitipy==0.2.0
 hangups==0.4.9
 
 # homeassistant.components.cloud
-hass-nabucasa==0.34.6
-
-# homeassistant.components.mqtt
-hbmqtt==0.9.5
+hass-nabucasa==0.34.7
 
 # homeassistant.components.jewish_calendar
 hdate==0.9.5
@@ -741,7 +738,7 @@ hole==0.5.1
 holidays==0.10.2
 
 # homeassistant.components.frontend
-home-assistant-frontend==20200620.0
+home-assistant-frontend==20200623.3
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -1326,9 +1323,6 @@ pyeverlights==0.1.0
 # homeassistant.components.ezviz
 pyezviz==0.1.5
 
-# homeassistant.components.fortigate
-pyfgt==0.5.1
-
 # homeassistant.components.fido
 pyfido==2.1.1
 
@@ -1694,7 +1688,7 @@ python-family-hub-local==0.0.2
 python-forecastio==1.4.0
 
 # homeassistant.components.sms
-# python-gammu==2.12
+# python-gammu==3.0
 
 # homeassistant.components.gc100
 python-gc100==1.0.3a
@@ -2118,7 +2112,7 @@ tmb==0.0.4
 todoist-python==8.0.0
 
 # homeassistant.components.toon
-toonapilib==3.2.4
+toonapi==0.1.0
 
 # homeassistant.components.totalconnect
 total_connect_client==0.55
