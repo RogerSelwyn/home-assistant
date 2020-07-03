@@ -20,6 +20,8 @@ from homeassistant.const import (
     ATTR_NAME,
     CONF_DOMAINS,
     CONF_ENTITIES,
+    CONF_EXCLUDE,
+    CONF_INCLUDE,
     EVENT_HOMEASSISTANT_START,
     EVENT_HOMEASSISTANT_STOP,
     EVENT_STATE_CHANGED,
@@ -77,7 +79,15 @@ class TestComponentLogbook(unittest.TestCase):
             },
             True,
         )
-
+        self.hass.services.call(
+            logbook.DOMAIN,
+            "log",
+            {
+                logbook.ATTR_NAME: "This entry",
+                logbook.ATTR_MESSAGE: "has no domain or entity_id",
+            },
+            True,
+        )
         # Logbook entry service call results in firing an event.
         # Our service call will unblock when the event listeners have been
         # scheduled. This means that they may not have been processed yet.
@@ -92,15 +102,21 @@ class TestComponentLogbook(unittest.TestCase):
                 dt_util.utcnow() + timedelta(hours=1),
             )
         )
-        assert len(events) == 1
+        assert len(events) == 2
 
-        assert len(calls) == 1
+        assert len(calls) == 2
+        first_call = calls[-2]
+
+        assert first_call.data.get(logbook.ATTR_NAME) == "Alarm"
+        assert first_call.data.get(logbook.ATTR_MESSAGE) == "is triggered"
+        assert first_call.data.get(logbook.ATTR_DOMAIN) == "switch"
+        assert first_call.data.get(logbook.ATTR_ENTITY_ID) == "switch.test_switch"
+
         last_call = calls[-1]
 
-        assert last_call.data.get(logbook.ATTR_NAME) == "Alarm"
-        assert last_call.data.get(logbook.ATTR_MESSAGE) == "is triggered"
-        assert last_call.data.get(logbook.ATTR_DOMAIN) == "switch"
-        assert last_call.data.get(logbook.ATTR_ENTITY_ID) == "switch.test_switch"
+        assert last_call.data.get(logbook.ATTR_NAME) == "This entry"
+        assert last_call.data.get(logbook.ATTR_MESSAGE) == "has no domain or entity_id"
+        assert last_call.data.get(logbook.ATTR_DOMAIN) == "logbook"
 
     def test_service_call_create_log_book_entry_no_message(self):
         """Test if service call create log book entry without message."""
@@ -240,7 +256,7 @@ class TestComponentLogbook(unittest.TestCase):
         config = logbook.CONFIG_SCHEMA(
             {
                 ha.DOMAIN: {},
-                logbook.DOMAIN: {logbook.CONF_EXCLUDE: {CONF_ENTITIES: [entity_id]}},
+                logbook.DOMAIN: {CONF_EXCLUDE: {CONF_ENTITIES: [entity_id]}},
             }
         )
         entities_filter = convert_include_exclude_filter(config[logbook.DOMAIN])
@@ -277,9 +293,7 @@ class TestComponentLogbook(unittest.TestCase):
         config = logbook.CONFIG_SCHEMA(
             {
                 ha.DOMAIN: {},
-                logbook.DOMAIN: {
-                    logbook.CONF_EXCLUDE: {CONF_DOMAINS: ["switch", "alexa"]}
-                },
+                logbook.DOMAIN: {CONF_EXCLUDE: {CONF_DOMAINS: ["switch", "alexa"]}},
             }
         )
         entities_filter = convert_include_exclude_filter(config[logbook.DOMAIN])
@@ -321,7 +335,7 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_EXCLUDE: {
+                    CONF_EXCLUDE: {
                         CONF_DOMAINS: ["switch", "alexa"],
                         CONF_ENTITY_GLOBS: "*.excluded",
                     }
@@ -365,7 +379,7 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_INCLUDE: {
+                    CONF_INCLUDE: {
                         CONF_DOMAINS: ["homeassistant"],
                         CONF_ENTITIES: [entity_id2],
                     }
@@ -413,9 +427,7 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_INCLUDE: {
-                        CONF_DOMAINS: ["homeassistant", "sensor", "alexa"]
-                    }
+                    CONF_INCLUDE: {CONF_DOMAINS: ["homeassistant", "sensor", "alexa"]}
                 },
             }
         )
@@ -465,7 +477,7 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_INCLUDE: {
+                    CONF_INCLUDE: {
                         CONF_DOMAINS: ["homeassistant", "sensor", "alexa"],
                         CONF_ENTITY_GLOBS: ["*.included"],
                     }
@@ -517,11 +529,11 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_INCLUDE: {
+                    CONF_INCLUDE: {
                         CONF_DOMAINS: ["sensor", "homeassistant"],
                         CONF_ENTITIES: ["switch.bla"],
                     },
-                    logbook.CONF_EXCLUDE: {
+                    CONF_EXCLUDE: {
                         CONF_DOMAINS: ["switch"],
                         CONF_ENTITIES: ["sensor.bli"],
                     },
@@ -586,12 +598,12 @@ class TestComponentLogbook(unittest.TestCase):
             {
                 ha.DOMAIN: {},
                 logbook.DOMAIN: {
-                    logbook.CONF_INCLUDE: {
+                    CONF_INCLUDE: {
                         CONF_DOMAINS: ["sensor", "homeassistant"],
                         CONF_ENTITIES: ["switch.bla"],
                         CONF_ENTITY_GLOBS: ["*.included"],
                     },
-                    logbook.CONF_EXCLUDE: {
+                    CONF_EXCLUDE: {
                         CONF_DOMAINS: ["switch"],
                         CONF_ENTITY_GLOBS: ["*.excluded"],
                         CONF_ENTITIES: ["sensor.bli"],
@@ -1617,10 +1629,7 @@ async def test_exclude_described_event(hass, hass_client):
         logbook.DOMAIN,
         {
             logbook.DOMAIN: {
-                logbook.CONF_EXCLUDE: {
-                    CONF_DOMAINS: ["sensor"],
-                    CONF_ENTITIES: [entity_id],
-                }
+                CONF_EXCLUDE: {CONF_DOMAINS: ["sensor"], CONF_ENTITIES: [entity_id]}
             }
         },
     )
