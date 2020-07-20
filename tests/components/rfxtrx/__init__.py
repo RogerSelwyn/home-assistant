@@ -2,5 +2,13 @@
 from homeassistant.components import rfxtrx
 
 
-async def _signal_event(hass, event):
-    await hass.async_add_executor_job(rfxtrx.RECEIVED_EVT_SUBSCRIBERS[0], event)
+async def _signal_event(hass, packet_id):
+    event = rfxtrx.get_rfx_object(packet_id)
+
+    await hass.async_add_executor_job(
+        hass.data[rfxtrx.DATA_RFXOBJECT].event_callback, event,
+    )
+
+    await hass.async_block_till_done()
+    await hass.async_block_till_done()
+    return event

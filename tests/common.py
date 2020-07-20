@@ -149,7 +149,7 @@ def get_test_home_assistant():
 # pylint: disable=protected-access
 async def async_test_home_assistant(loop):
     """Return a Home Assistant object pointing at test config dir."""
-    hass = ha.HomeAssistant(loop)
+    hass = ha.HomeAssistant()
     store = auth_store.AuthStore(hass)
     hass.auth = auth.AuthManager(hass, store, {}, {})
     ensure_auth_manager_loaded(hass.auth)
@@ -351,6 +351,7 @@ def mock_registry(hass, mock_entries=None):
     """Mock the Entity Registry."""
     registry = entity_registry.EntityRegistry(hass)
     registry.entities = mock_entries or OrderedDict()
+    registry._rebuild_index()
 
     hass.data[entity_registry.DATA_REGISTRY] = registry
     return registry
@@ -370,6 +371,7 @@ def mock_device_registry(hass, mock_entries=None, mock_deleted_entries=None):
     registry = device_registry.DeviceRegistry(hass)
     registry.devices = mock_entries or OrderedDict()
     registry.deleted_devices = mock_deleted_entries or OrderedDict()
+    registry._rebuild_index()
 
     hass.data[device_registry.DATA_REGISTRY] = registry
     return registry
