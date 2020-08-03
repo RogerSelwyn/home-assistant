@@ -344,13 +344,16 @@ ha-ffmpeg==2.0
 hangups==0.4.9
 
 # homeassistant.components.cloud
-hass-nabucasa==0.34.7
+hass-nabucasa==0.35.0
 
 # homeassistant.components.jewish_calendar
 hdate==0.9.5
 
 # homeassistant.components.here_travel_time
 herepy==2.0.0
+
+# homeassistant.components.hlk_sw16
+hlk-sw16==0.0.8
 
 # homeassistant.components.pi_hole
 hole==0.5.1
@@ -421,7 +424,7 @@ mbddns==0.1.2
 mcstatus==2.3.0
 
 # homeassistant.components.meteo_france
-meteofrance==0.3.7
+meteofrance-api==0.1.0
 
 # homeassistant.components.mfi
 mficlient==0.3.0
@@ -452,7 +455,7 @@ nsw-fuel-api-client==1.0.10
 nuheat==0.3.0
 
 # homeassistant.components.numato
-numato-gpio==0.7.1
+numato-gpio==0.8.0
 
 # homeassistant.components.iqvia
 # homeassistant.components.opencv
@@ -960,9 +963,6 @@ url-normalize==1.4.1
 # homeassistant.components.uvc
 uvcclient==0.11.0
 
-# homeassistant.components.meteo_france
-vigilancemeteo==3.0.1
-
 # homeassistant.components.vilfo
 vilfo-api-client==0.3.2
 
@@ -997,6 +997,9 @@ wolf_smartset==0.1.4
 # homeassistant.components.yr
 # homeassistant.components.zestimate
 xmltodict==0.12.0
+
+# homeassistant.components.yeelight
+yeelight==0.5.2
 
 # homeassistant.components.zeroconf
 zeroconf==0.28.0
