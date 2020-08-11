@@ -85,8 +85,14 @@ aiobotocore==0.11.1
 # homeassistant.components.minecraft_server
 aiodns==2.0.0
 
+# homeassistant.components.eafm
+aioeafm==0.1.2
+
 # homeassistant.components.esphome
 aioesphomeapi==2.6.1
+
+# homeassistant.components.flo
+aioflo==0.4.0
 
 # homeassistant.components.freebox
 aiofreepybox==0.0.8
@@ -120,7 +126,7 @@ aiopulse==0.4.0
 aiopvapi==1.6.14
 
 # homeassistant.components.pvpc_hourly_pricing
-aiopvpc==1.0.2
+aiopvpc==2.0.2
 
 # homeassistant.components.webostv
 aiopylgtv==0.3.3
@@ -243,7 +249,7 @@ defusedxml==0.6.0
 denonavr==0.9.4
 
 # homeassistant.components.devolo_home_control
-devolo-home-control-api==0.11.0
+devolo-home-control-api==0.13.0
 
 # homeassistant.components.directv
 directv==0.3.0
@@ -258,7 +264,7 @@ doorbirdpy==2.1.0
 dsmr_parser==0.18
 
 # homeassistant.components.dynalite
-dynalite_devices==0.1.44
+dynalite_devices==0.1.45
 
 # homeassistant.components.ee_brightbox
 eebrightbox==0.0.4
@@ -548,6 +554,9 @@ py-canary==0.5.0
 # homeassistant.components.melissa
 py-melissa-climate==2.0.0
 
+# homeassistant.components.nightscout
+py-nightscout==1.2.1
+
 # homeassistant.components.seventeentrack
 py17track==2.2.2
 
@@ -598,7 +607,7 @@ pybotvac==0.0.17
 pychromecast==7.2.0
 
 # homeassistant.components.coolmaster
-pycoolmasternet==0.0.4
+pycoolmasternet-async==0.1.0
 
 # homeassistant.components.avri
 pycountry==19.8.18
@@ -749,13 +758,13 @@ pysignalclirestapi==0.3.4
 pysma==0.3.5
 
 # homeassistant.components.smappee
-pysmappee==0.1.5
+pysmappee==0.2.9
 
 # homeassistant.components.smartthings
 pysmartapp==0.3.2
 
 # homeassistant.components.smartthings
-pysmartthings==0.7.2
+pysmartthings==0.7.3
 
 # homeassistant.components.soma
 pysoma==0.0.10
