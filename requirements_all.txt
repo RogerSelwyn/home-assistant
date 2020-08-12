@@ -246,7 +246,7 @@ ambiclimate==0.2.1
 amcrest==1.7.0
 
 # homeassistant.components.androidtv
-androidtv[async]==0.0.48
+androidtv[async]==0.0.49
 
 # homeassistant.components.anel_pwrctrl
 anel_pwrctrl-homeassistant==0.0.1.dev2
@@ -334,7 +334,7 @@ beautifulsoup4==4.9.0
 beewi_smartclim==0.0.7
 
 # homeassistant.components.zha
-bellows==0.18.0
+bellows==0.18.1
 
 # homeassistant.components.bmw_connected_drive
 bimmer_connected==0.7.7
@@ -504,6 +504,9 @@ dovado==0.4.1
 
 # homeassistant.components.dsmr
 dsmr_parser==0.18
+
+# homeassistant.components.dwd_weather_warnings
+dwdwfsapi==1.0.2
 
 # homeassistant.components.dweet
 dweepy==0.3.0
@@ -739,7 +742,7 @@ hole==0.5.1
 holidays==0.10.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20200807.1
+home-assistant-frontend==20200811.0
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -830,7 +833,7 @@ konnected==1.1.0
 lakeside==0.12
 
 # homeassistant.components.dyson
-libpurecool==0.6.1
+libpurecool==0.6.3
 
 # homeassistant.components.foscam
 libpyfoscam==1.0
@@ -1002,7 +1005,7 @@ oemthermostat==1.1
 onkyo-eiscp==1.2.7
 
 # homeassistant.components.onvif
-onvif-zeep-async==0.4.0
+onvif-zeep-async==0.5.0
 
 # homeassistant.components.opengarage
 open-garage==0.1.4
@@ -1864,7 +1867,7 @@ qnapstats==0.3.0
 quantum-gateway==0.0.5
 
 # homeassistant.components.rachio
-rachiopy==0.1.3
+rachiopy==0.1.4
 
 # homeassistant.components.radiotherm
 radiotherm==2.0.0
@@ -2278,7 +2281,7 @@ zengge==0.2
 zeroconf==0.28.0
 
 # homeassistant.components.zha
-zha-quirks==0.0.42
+zha-quirks==0.0.43
 
 # homeassistant.components.zhong_hong
 zhong_hong_hvac==1.0.9
