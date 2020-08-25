@@ -221,6 +221,9 @@ aiopvpc==2.0.2
 # homeassistant.components.webostv
 aiopylgtv==0.3.3
 
+# homeassistant.components.shelly
+aioshelly==0.1.2
+
 # homeassistant.components.switcher_kis
 aioswitcher==1.2.0
 
@@ -742,7 +745,7 @@ hole==0.5.1
 holidays==0.10.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20200820.0
+home-assistant-frontend==20200824.0
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -1849,6 +1852,9 @@ pywebpush==1.9.2
 # homeassistant.components.wemo
 pywemo==0.4.46
 
+# homeassistant.components.wilight
+pywilight==0.0.65
+
 # homeassistant.components.xeoma
 pyxeoma==1.4.1
 
@@ -2111,7 +2117,7 @@ tellcore-py==1.1.2
 tellduslive==0.10.11
 
 # homeassistant.components.lg_soundbar
-temescal==0.1
+temescal==0.2
 
 # homeassistant.components.temper
 temperusb==1.5.3

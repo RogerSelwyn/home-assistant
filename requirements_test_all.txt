@@ -131,6 +131,9 @@ aiopvpc==2.0.2
 # homeassistant.components.webostv
 aiopylgtv==0.3.3
 
+# homeassistant.components.shelly
+aioshelly==0.1.2
+
 # homeassistant.components.switcher_kis
 aioswitcher==1.2.0
 
@@ -368,7 +371,7 @@ hole==0.5.1
 holidays==0.10.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20200820.0
+home-assistant-frontend==20200824.0
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -853,6 +856,9 @@ pyvolumio==0.1.1
 
 # homeassistant.components.html5
 pywebpush==1.9.2
+
+# homeassistant.components.wilight
+pywilight==0.0.65
 
 # homeassistant.components.zerproc
 pyzerproc==0.2.5
