@@ -93,7 +93,10 @@ class RiscoDataUpdateCoordinator(DataUpdateCoordinator):
         self.risco = risco
         interval = timedelta(seconds=scan_interval)
         super().__init__(
-            hass, _LOGGER, name=DOMAIN, update_interval=interval,
+            hass,
+            _LOGGER,
+            name=DOMAIN,
+            update_interval=interval,
         )
 
     async def _async_update_data(self):
@@ -101,4 +104,4 @@ class RiscoDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             return await self.risco.get_state()
         except (CannotConnectError, UnauthorizedError, OperationError) as error:
-            raise UpdateFailed from error
+            raise UpdateFailed(error) from error

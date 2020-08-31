@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from typing import Iterable, Optional
+from typing import Any, Dict, Iterable, Optional
 
 from homeassistant import config as conf_util
 from homeassistant.const import SERVICE_RELOAD
@@ -59,6 +59,17 @@ async def async_reload_integration_platforms(
             await platform.async_setup(p_config)  # type: ignore
 
 
+async def async_integration_yaml_config(
+    hass: HomeAssistantType, integration_name: str
+) -> Optional[Dict[Any, Any]]:
+    """Fetch the latest yaml configuration for an integration."""
+    integration = await async_get_integration(hass, integration_name)
+
+    return await conf_util.async_process_component_config(
+        hass, await conf_util.async_hass_config_yaml(hass), integration
+    )
+
+
 @callback
 def async_get_platform(
     hass: HomeAssistantType, integration_name: str, integration_platform_name: str
@@ -97,5 +108,6 @@ def setup_reload_service(
     """Sync version of async_setup_reload_service."""
 
     asyncio.run_coroutine_threadsafe(
-        async_setup_reload_service(hass, domain, platforms), hass.loop,
+        async_setup_reload_service(hass, domain, platforms),
+        hass.loop,
     ).result()

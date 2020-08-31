@@ -103,6 +103,7 @@ async def async_attach_trigger(
                         "to_state": to_s,
                         "for": time_delta if not time_delta else period[entity],
                         "attribute": attribute,
+                        "description": f"state of {entity}",
                     }
                 },
                 event.context,
@@ -143,7 +144,11 @@ async def async_attach_trigger(
             return cur_value == new_value
 
         unsub_track_same[entity] = async_track_same_state(
-            hass, period[entity], call_action, _check_same_state, entity_ids=entity,
+            hass,
+            period[entity],
+            call_action,
+            _check_same_state,
+            entity_ids=entity,
         )
 
     unsub = async_track_state_change_event(hass, entity_id, state_automation_listener)
