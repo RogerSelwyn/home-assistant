@@ -120,6 +120,7 @@ homeassistant/components/elkm1/* @gwww @bdraco
 homeassistant/components/elv/* @majuss
 homeassistant/components/emby/* @mezz64
 homeassistant/components/emoncms/* @borpin
+homeassistant/components/emulated_kasa/* @kbickar
 homeassistant/components/enigma2/* @fbradyirl
 homeassistant/components/enocean/* @bdurrer
 homeassistant/components/entur_public_transport/* @hfurubotten
@@ -244,6 +245,7 @@ homeassistant/components/lutron_caseta/* @swails
 homeassistant/components/mastodon/* @fabaff
 homeassistant/components/matrix/* @tinloaf
 homeassistant/components/mcp23017/* @jardiamj
+homeassistant/components/media_source/* @hunterjm
 homeassistant/components/mediaroom/* @dgomes
 homeassistant/components/melcloud/* @vilppuvuorinen
 homeassistant/components/melissa/* @kennedyshead
@@ -304,7 +306,7 @@ homeassistant/components/openerz/* @misialq
 homeassistant/components/opengarage/* @danielhiversen
 homeassistant/components/opentherm_gw/* @mvn23
 homeassistant/components/openuv/* @bachya
-homeassistant/components/openweathermap/* @fabaff
+homeassistant/components/openweathermap/* @fabaff @freekode
 homeassistant/components/opnsense/* @mtreinish
 homeassistant/components/orangepi_gpio/* @pascallj
 homeassistant/components/oru/* @bvlaicu
