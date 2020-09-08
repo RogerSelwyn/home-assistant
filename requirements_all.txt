@@ -26,7 +26,7 @@ Mastodon.py==1.5.1
 OPi.GPIO==0.4.0
 
 # homeassistant.components.plugwise
-Plugwise_Smile==1.1.0
+Plugwise_Smile==1.4.0
 
 # homeassistant.components.essent
 PyEssent==0.13
@@ -746,7 +746,7 @@ hole==0.5.1
 holidays==0.10.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20200904.0
+home-assistant-frontend==20200907.0
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -1427,7 +1427,7 @@ pyitachip2ir==0.0.7
 pykira==0.1.1
 
 # homeassistant.components.kodi
-pykodi==0.1.1
+pykodi==0.1.2
 
 # homeassistant.components.kwb
 pykwb==0.0.8
