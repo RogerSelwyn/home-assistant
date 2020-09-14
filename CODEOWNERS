@@ -236,6 +236,7 @@ homeassistant/components/linux_battery/* @fabaff
 homeassistant/components/local_ip/* @issacg
 homeassistant/components/logger/* @home-assistant/core
 homeassistant/components/logi_circle/* @evanjd
+homeassistant/components/loopenergy/* @pavoni
 homeassistant/components/lovelace/* @home-assistant/frontend
 homeassistant/components/luci/* @fbradyirl @mzdrale
 homeassistant/components/luftdaten/* @fabaff
@@ -356,6 +357,7 @@ homeassistant/components/rmvtransport/* @cgtobi
 homeassistant/components/roku/* @ctalkington
 homeassistant/components/roomba/* @pschmitt @cyr-ius @shenxn
 homeassistant/components/roon/* @pavoni
+homeassistant/components/rpi_power/* @shenxn @swetoast
 homeassistant/components/safe_mode/* @home-assistant/core
 homeassistant/components/saj/* @fredericvl
 homeassistant/components/salt/* @bjornorri
@@ -465,7 +467,7 @@ homeassistant/components/velbus/* @Cereal2nd @brefra
 homeassistant/components/velux/* @Julius2342
 homeassistant/components/vera/* @vangorra
 homeassistant/components/versasense/* @flamm3blemuff1n
-homeassistant/components/version/* @fabaff
+homeassistant/components/version/* @fabaff @ludeeus
 homeassistant/components/vesync/* @markperdue @webdjoe @thegardenmonkey
 homeassistant/components/vicare/* @oischinger
 homeassistant/components/vilfo/* @ManneW
