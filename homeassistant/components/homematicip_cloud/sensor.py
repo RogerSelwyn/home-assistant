@@ -30,6 +30,8 @@ from homeassistant.const import (
     DEVICE_CLASS_ILLUMINANCE,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_TEMPERATURE,
+    LENGTH_MILLIMETERS,
+    LIGHT_LUX,
     PERCENTAGE,
     POWER_WATT,
     SPEED_KILOMETERS_PER_HOUR,
@@ -281,7 +283,7 @@ class HomematicipIlluminanceSensor(HomematicipGenericEntity):
     @property
     def unit_of_measurement(self) -> str:
         """Return the unit this state is expressed in."""
-        return "lx"
+        return LIGHT_LUX
 
     @property
     def device_state_attributes(self) -> Dict[str, Any]:
@@ -367,7 +369,7 @@ class HomematicipTodayRainSensor(HomematicipGenericEntity):
     @property
     def unit_of_measurement(self) -> str:
         """Return the unit this state is expressed in."""
-        return "mm"
+        return LENGTH_MILLIMETERS
 
 
 class HomematicipPassageDetectorDeltaCounter(HomematicipGenericEntity):

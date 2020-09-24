@@ -403,6 +403,7 @@ TIME_MONTHS = "m"
 TIME_YEARS = "y"
 
 # Length units
+LENGTH_MILLIMETERS: str = "mm"
 LENGTH_CENTIMETERS: str = "cm"
 LENGTH_METERS: str = "m"
 LENGTH_KILOMETERS: str = "km"
@@ -447,6 +448,9 @@ MASS_POUNDS: str = "lb"
 
 # Conductivity units
 CONDUCTIVITY: str = f"µS/{LENGTH_CENTIMETERS}"
+
+# Light units
+LIGHT_LUX: str = "lx"
 
 # UV Index units
 UV_INDEX: str = "UV index"
