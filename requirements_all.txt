@@ -70,7 +70,7 @@ PyTurboJPEG==1.4.0
 PyViCare==0.2.0
 
 # homeassistant.components.xiaomi_aqara
-PyXiaomiGateway==0.13.2
+PyXiaomiGateway==0.13.3
 
 # homeassistant.components.bmp280
 # homeassistant.components.mcp23017
@@ -339,7 +339,7 @@ beautifulsoup4==4.9.1
 # beewi_smartclim==0.0.7
 
 # homeassistant.components.zha
-bellows==0.20.2
+bellows==0.20.3
 
 # homeassistant.components.bmw_connected_drive
 bimmer_connected==0.7.7
@@ -1059,7 +1059,7 @@ ovoenergy==1.1.7
 
 # homeassistant.components.mqtt
 # homeassistant.components.shiftr
-paho-mqtt==1.5.0
+paho-mqtt==1.5.1
 
 # homeassistant.components.panasonic_bluray
 panacotta==0.1
@@ -1247,7 +1247,7 @@ pyalmond==0.0.2
 pyarlo==0.2.3
 
 # homeassistant.components.atag
-pyatag==0.3.3.4
+pyatag==0.3.4.4
 
 # homeassistant.components.netatmo
 pyatmo==4.0.0
@@ -1580,7 +1580,7 @@ pyownet==0.10.0.post1
 pypca==0.0.7
 
 # homeassistant.components.lcn
-pypck==0.6.4
+pypck==0.7.2
 
 # homeassistant.components.pjlink
 pypjlink2==1.2.1
@@ -2277,7 +2277,7 @@ xboxapi==2.0.1
 xfinity-gateway==0.0.4
 
 # homeassistant.components.knx
-xknx==0.14.4
+xknx==0.15.0
 
 # homeassistant.components.bluesound
 # homeassistant.components.rest
@@ -2308,7 +2308,7 @@ zengge==0.2
 zeroconf==0.28.5
 
 # homeassistant.components.zha
-zha-quirks==0.0.44
+zha-quirks==0.0.45
 
 # homeassistant.components.zhong_hong
 zhong_hong_hvac==1.0.9
