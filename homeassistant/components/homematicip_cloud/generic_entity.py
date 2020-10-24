@@ -5,9 +5,11 @@ from typing import Any, Dict, Optional
 from homematicip.aio.device import AsyncDevice
 from homematicip.aio.group import AsyncGroup
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback
 from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.typing import HomeAssistantType
 
 from .const import DOMAIN as HMIPC_DOMAIN
 from .hap import HomematicipHAP
@@ -70,12 +72,21 @@ GROUP_ATTRIBUTES = {
 class HomematicipGenericEntity(Entity):
     """Representation of the HomematicIP generic entity."""
 
-    def __init__(self, hap: HomematicipHAP, device, post: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        hap: HomematicipHAP,
+        device,
+        post: Optional[str] = None,
+        channel: Optional[int] = None,
+        is_multi_area: Optional[bool] = False,
+    ) -> None:
         """Initialize the generic entity."""
         self._hap = hap
         self._home = hap.home
         self._device = device
-        self.post = post
+        self._post = post
+        self._channel = channel
+        self._is_multi_area = is_multi_area
         # Marker showing that the HmIP device hase been removed.
         self.hmip_device_removed = False
         _LOGGER.info("Setting up %s (%s)", self.name, self._device.modelType)
@@ -85,6 +96,20 @@ class HomematicipGenericEntity(Entity):
         """Return device specific attributes."""
         # Only physical devices should be HA devices.
         if isinstance(self._device, AsyncDevice):
+            if self._is_multi_area:
+                return {
+                    "identifiers": {
+                        # Unique ID of Homematic IP device
+                        (HMIPC_DOMAIN, self.unique_id)
+                    },
+                    "name": self.name,
+                    "manufacturer": self._device.oem,
+                    "model": self._device.modelType,
+                    "sw_version": self._device.firmwareVersion,
+                    # Link to the base device.
+                    "via_device": (HMIPC_DOMAIN, self._device.id),
+                }
+
             return {
                 "identifiers": {
                     # Serial numbers of Homematic IP device
@@ -94,6 +119,7 @@ class HomematicipGenericEntity(Entity):
                 "manufacturer": self._device.oem,
                 "model": self._device.modelType,
                 "sw_version": self._device.firmwareVersion,
+                # Link to the homematic ip access point.
                 "via_device": (HMIPC_DOMAIN, self._device.homeId),
             }
         return None
@@ -167,18 +193,28 @@ class HomematicipGenericEntity(Entity):
     @property
     def name(self) -> str:
         """Return the name of the generic entity."""
-        name = self._device.label
-        if name and self._home.name:
-            name = f"{self._home.name} {name}"
-        if name and self.post:
-            name = f"{name} {self.post}"
-        return name
 
-    def _get_label_by_channel(self, channel: int) -> str:
-        """Return the name of the channel."""
-        name = self._device.functionalChannels[channel].label
+        name = None
+        # Try to get a label from a channel.
+        if hasattr(self._device, "functionalChannels"):
+            if self._channel:
+                name = self._device.functionalChannels[self._channel].label
+            else:
+                if len(self._device.functionalChannels) > 1:
+                    name = self._device.functionalChannels[1].label
+
+        # Use device label, if name is not defined by channel label.
+        if not name:
+            name = self._device.label
+            if self._post:
+                name = f"{name} {self._post}"
+            elif self._channel:
+                name = f"{name} Channel{self._channel}"
+
+        # Add a prefix to the name if the homematic ip home has a name.
         if name and self._home.name:
             name = f"{self._home.name} {name}"
+
         return name
 
     @property
@@ -194,7 +230,13 @@ class HomematicipGenericEntity(Entity):
     @property
     def unique_id(self) -> str:
         """Return a unique ID."""
-        return f"{self.__class__.__name__}_{self._device.id}"
+        unique_id = f"{self.__class__.__name__}_{self._device.id}"
+        if self._channel:
+            unique_id = (
+                f"{self.__class__.__name__}_Channel{self._channel}_{self._device.id}"
+            )
+
+        return unique_id
 
     @property
     def icon(self) -> Optional[str]:
@@ -227,3 +269,19 @@ class HomematicipGenericEntity(Entity):
             state_attr[ATTR_IS_GROUP] = True
 
         return state_attr
+
+
+async def async_add_base_multi_area_device(
+    hass: HomeAssistantType, entry: ConfigEntry, device: AsyncDevice
+):
+    """Register base multi area device in registry."""
+    device_registry = await dr.async_get_registry(hass)
+    device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={(HMIPC_DOMAIN, device.id)},
+        manufacturer=device.oem,
+        name=device.label,
+        model=device.modelType,
+        sw_version=device.firmwareVersion,
+        via_device=(HMIPC_DOMAIN, device.homeId),
+    )
