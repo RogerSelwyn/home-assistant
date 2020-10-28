@@ -4,7 +4,7 @@ import asyncio
 import base64
 import collections.abc
 from datetime import datetime, timedelta
-from functools import wraps
+from functools import partial, wraps
 import json
 import logging
 import math
@@ -127,7 +127,7 @@ def is_template_string(maybe_template: str) -> bool:
 class ResultWrapper:
     """Result wrapper class to store render result."""
 
-    render_result: str
+    render_result: Optional[str]
 
 
 def gen_result_wrapper(kls):
@@ -136,9 +136,19 @@ def gen_result_wrapper(kls):
     class Wrapper(kls, ResultWrapper):
         """Wrapper of a kls that can store render_result."""
 
-        def __init__(self, value: kls, render_result: str) -> None:
-            super().__init__(value)
+        def __init__(self, *args: tuple, render_result: Optional[str] = None) -> None:
+            super().__init__(*args)
             self.render_result = render_result
+
+        def __str__(self) -> str:
+            if self.render_result is None:
+                # Can't get set repr to work
+                if kls is set:
+                    return str(set(self))
+
+                return kls.__str__(self)
+
+            return self.render_result
 
     return Wrapper
 
@@ -148,15 +158,24 @@ class TupleWrapper(tuple, ResultWrapper):
 
     # This is all magic to be allowed to subclass a tuple.
 
-    def __new__(cls, value: tuple, render_result: str) -> "TupleWrapper":
+    def __new__(
+        cls, value: tuple, *, render_result: Optional[str] = None
+    ) -> "TupleWrapper":
         """Create a new tuple class."""
         return super().__new__(cls, tuple(value))
 
     # pylint: disable=super-init-not-called
 
-    def __init__(self, value: tuple, render_result: str):
+    def __init__(self, value: tuple, *, render_result: Optional[str] = None):
         """Initialize a new tuple class."""
         self.render_result = render_result
+
+    def __str__(self) -> str:
+        """Return string representation."""
+        if self.render_result is None:
+            return super().__str__()
+
+        return self.render_result
 
 
 RESULT_WRAPPERS: Dict[Type, Type] = {
@@ -360,28 +379,36 @@ class Template:
 
         return extract_entities(self.hass, self.template, variables)
 
-    def render(self, variables: TemplateVarsType = None, **kwargs: Any) -> Any:
+    def render(
+        self,
+        variables: TemplateVarsType = None,
+        parse_result: bool = True,
+        **kwargs: Any,
+    ) -> Any:
         """Render given template."""
         if self.is_static:
-            if self.hass.config.legacy_templates:
+            if self.hass.config.legacy_templates or not parse_result:
                 return self.template
             return self._parse_result(self.template)
 
-        if variables is not None:
-            kwargs.update(variables)
-
         return run_callback_threadsafe(
-            self.hass.loop, self.async_render, kwargs
+            self.hass.loop,
+            partial(self.async_render, variables, parse_result, **kwargs),
         ).result()
 
     @callback
-    def async_render(self, variables: TemplateVarsType = None, **kwargs: Any) -> Any:
+    def async_render(
+        self,
+        variables: TemplateVarsType = None,
+        parse_result: bool = True,
+        **kwargs: Any,
+    ) -> Any:
         """Render given template.
 
         This method must be run in the event loop.
         """
         if self.is_static:
-            if self.hass.config.legacy_templates:
+            if self.hass.config.legacy_templates or not parse_result:
                 return self.template
             return self._parse_result(self.template)
 
@@ -397,7 +424,7 @@ class Template:
 
         render_result = render_result.strip()
 
-        if self.hass.config.legacy_templates:
+        if self.hass.config.legacy_templates or not parse_result:
             return render_result
 
         return self._parse_result(render_result)
@@ -408,7 +435,9 @@ class Template:
             result = literal_eval(render_result)
 
             if type(result) in RESULT_WRAPPERS:
-                result = RESULT_WRAPPERS[type(result)](result, render_result)
+                result = RESULT_WRAPPERS[type(result)](
+                    result, render_result=render_result
+                )
 
             # If the literal_eval result is a string, use the original
             # render, by not returning right here. The evaluation of strings
@@ -416,7 +445,7 @@ class Template:
             # output; use the original render instead of the evaluated one.
             if not isinstance(result, str):
                 return result
-        except (ValueError, SyntaxError, MemoryError):
+        except (ValueError, TypeError, SyntaxError, MemoryError):
             pass
 
         return render_result

@@ -433,6 +433,9 @@ coinmarketcap==5.0.3
 # homeassistant.scripts.check_config
 colorlog==4.2.1
 
+# homeassistant.components.color_extractor
+colorthief==0.2.1
+
 # homeassistant.components.concord232
 concord232==0.15
 
@@ -460,7 +463,7 @@ datadog==0.15.0
 datapoint==0.9.5
 
 # homeassistant.components.debugpy
-debugpy==1.0.0rc2
+debugpy==1.0.0
 
 # homeassistant.components.decora
 # decora==0.6
@@ -616,7 +619,7 @@ freesms==0.1.2
 # homeassistant.components.fritz
 # homeassistant.components.fritzbox_callmonitor
 # homeassistant.components.fritzbox_netmonitor
-fritzconnection==1.2.0
+fritzconnection==1.3.4
 
 # homeassistant.components.google_translate
 gTTS-token==1.1.3
@@ -732,10 +735,10 @@ hass-nabucasa==0.37.1
 hass_splunk==0.1.1
 
 # homeassistant.components.tasmota
-hatasmota==0.0.22
+hatasmota==0.0.24
 
 # homeassistant.components.jewish_calendar
-hdate==0.9.5
+hdate==0.9.12
 
 # homeassistant.components.heatmiser
 heatmiserV3==1.1.18
@@ -759,7 +762,7 @@ hole==0.5.1
 holidays==0.10.3
 
 # homeassistant.components.frontend
-home-assistant-frontend==20201021.2
+home-assistant-frontend==20201021.3
 
 # homeassistant.components.zwave
 homeassistant-pyozw==0.1.10
@@ -1692,7 +1695,7 @@ pysonos==0.0.35
 pyspcwebgw==0.4.0
 
 # homeassistant.components.squeezebox
-pysqueezebox==0.5.1
+pysqueezebox==0.5.4
 
 # homeassistant.components.stiebel_eltron
 pystiebeleltron==0.0.1.dev2
@@ -1809,7 +1812,7 @@ python-telnet-vlc==1.0.4
 python-twitch-client==0.6.0
 
 # homeassistant.components.velbus
-python-velbus==2.0.47
+python-velbus==2.1.1
 
 # homeassistant.components.vlc
 python-vlc==1.1.2
@@ -2015,7 +2018,7 @@ simplehound==0.3
 simplepush==1.1.4
 
 # homeassistant.components.simplisafe
-simplisafe-python==9.5.1
+simplisafe-python==9.6.0
 
 # homeassistant.components.sisyphus
 sisyphus-control==2.2.1
