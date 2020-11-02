@@ -281,7 +281,7 @@ eebrightbox==0.0.4
 elgato==0.2.0
 
 # homeassistant.components.elkm1
-elkm1-lib==0.8.5
+elkm1-lib==0.8.7
 
 # homeassistant.components.mobile_app
 emoji==0.5.4
@@ -318,7 +318,7 @@ geojson_client==0.4
 geopy==1.21.0
 
 # homeassistant.components.geo_rss_events
-georss_generic_client==0.3
+georss_generic_client==0.4
 
 # homeassistant.components.ign_sismologia
 georss_ign_sismologia_client==0.2
@@ -373,7 +373,7 @@ hangups==0.4.11
 hass-nabucasa==0.37.1
 
 # homeassistant.components.tasmota
-hatasmota==0.0.25
+hatasmota==0.0.26
 
 # homeassistant.components.jewish_calendar
 hdate==0.9.12
@@ -643,7 +643,7 @@ pyblackbird==0.5
 pybotvac==0.0.17
 
 # homeassistant.components.cloudflare
-pycfdns==1.1.1
+pycfdns==1.2.1
 
 # homeassistant.components.cast
 pychromecast==7.5.1
@@ -737,7 +737,7 @@ pylibrespot-java==0.1.0
 pylitejet==0.1
 
 # homeassistant.components.lutron_caseta
-pylutron-caseta==0.7.0
+pylutron-caseta==0.7.1
 
 # homeassistant.components.mailgun
 pymailgunner==1.4
@@ -938,7 +938,7 @@ rokuecp==0.6.0
 roombapy==1.6.1
 
 # homeassistant.components.roon
-roonapi==0.0.23
+roonapi==0.0.25
 
 # homeassistant.components.rpi_power
 rpi-bad-power==0.0.3
@@ -1131,4 +1131,4 @@ zigpy-zigate==0.6.2
 zigpy-znp==0.2.2
 
 # homeassistant.components.zha
-zigpy==0.26.0
+zigpy==0.27.0
