@@ -1,0 +1,17 @@
+{
+    "config": {
+        "abort": {
+            "site_exists": "See site_id on juba konfigureeritud"
+        },
+        "error": {
+            "site_exists": "See site_id on juba konfigureeritud"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API v\u00f5ti"
+                }
+            }
+        }
+    }
+}
