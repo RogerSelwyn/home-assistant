@@ -12,6 +12,7 @@
                     "ip_address": "IP Adresse",
                     "port": "Port"
                 },
+                "description": "Mat der API vun dengem Advantage Air Tablet verbannen",
                 "title": "Verbannen"
             }
         }
