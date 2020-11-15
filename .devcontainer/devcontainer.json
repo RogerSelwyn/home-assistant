@@ -4,7 +4,7 @@
   "dockerFile": "../Dockerfile.dev",
   "postCreateCommand": "mkdir -p config && pip3 install -e .",
   "appPort": 8123,
-  "runArgs": ["-e", "GIT_EDITOR=code --wait", "--net=host"],
+  "runArgs": ["-e", "GIT_EDITOR=code --wait"],
   "extensions": [
     "ms-python.vscode-pylance",
     "visualstudioexptteam.vscodeintellicode",
@@ -12,20 +12,21 @@
     "redhat.vscode-yaml",
     "esbenp.prettier-vscode"
   ],
-  "mounts": [
-    "source=/media/psf/Home/Documents/Development,target=/home,type=bind,consistency=cache"
-  ],
+  // Please keep this file in sync with settings in home-assistant/.vscode/settings.default.json
   "settings": {
     "python.pythonPath": "/usr/local/bin/python",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.formatting.provider": "black",
+    "python.testing.pytestArgs": ["--no-cov"],
+    "python.testing.pytestEnabled": true,
     "editor.formatOnPaste": false,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "files.trimTrailingWhitespace": true,
     "terminal.integrated.shell.linux": "/bin/bash",
     "yaml.customTags": [
+      "!placeholder scalar",
       "!secret scalar",
       "!include_dir_named scalar",
       "!include_dir_list scalar",
