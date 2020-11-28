@@ -47,6 +47,13 @@ def test_validate_selector():
         {"model": "mock-model"},
         {"manufacturer": "mock-manuf", "model": "mock-model"},
         {"integration": "zha", "manufacturer": "mock-manuf", "model": "mock-model"},
+        {"entity": {"device_class": "motion"}},
+        {
+            "integration": "zha",
+            "manufacturer": "mock-manuf",
+            "model": "mock-model",
+            "entity": {"domain": "binary_sensor", "device_class": "motion"},
+        },
     ),
 )
 def test_device_selector_schema(schema):
@@ -60,9 +67,53 @@ def test_device_selector_schema(schema):
         {},
         {"integration": "zha"},
         {"domain": "light"},
+        {"device_class": "motion"},
         {"integration": "zha", "domain": "light"},
+        {"integration": "zha", "domain": "binary_sensor", "device_class": "motion"},
     ),
 )
 def test_entity_selector_schema(schema):
     """Test entity selector."""
     selector.validate_selector({"entity": schema})
+
+
+@pytest.mark.parametrize(
+    "schema",
+    ({},),
+)
+def test_area_selector_schema(schema):
+    """Test area selector."""
+    selector.validate_selector({"area": schema})
+
+
+@pytest.mark.parametrize(
+    "schema",
+    (
+        {"min": 10, "max": 50},
+        {"min": -100, "max": 100, "step": 5},
+        {"min": -20, "max": -10, "mode": "box"},
+        {"min": 0, "max": 100, "unit_of_measurement": "seconds", "mode": "slider"},
+        {"min": 10, "max": 1000, "mode": "slider", "step": 0.5},
+    ),
+)
+def test_number_selector_schema(schema):
+    """Test number selector."""
+    selector.validate_selector({"number": schema})
+
+
+@pytest.mark.parametrize(
+    "schema",
+    ({},),
+)
+def test_boolean_selector_schema(schema):
+    """Test boolean selector."""
+    selector.validate_selector({"boolean": schema})
+
+
+@pytest.mark.parametrize(
+    "schema",
+    ({},),
+)
+def test_time_selector_schema(schema):
+    """Test time selector."""
+    selector.validate_selector({"time": schema})
