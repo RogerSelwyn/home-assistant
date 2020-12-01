@@ -131,7 +131,7 @@ aiopvpc==2.0.2
 aiopylgtv==0.3.3
 
 # homeassistant.components.recollect_waste
-aiorecollect==0.2.1
+aiorecollect==0.2.2
 
 # homeassistant.components.shelly
 aioshelly==0.5.1
@@ -207,7 +207,7 @@ bravia-tv==1.0.8
 broadlink==0.16.0
 
 # homeassistant.components.brother
-brother==0.1.18
+brother==0.1.20
 
 # homeassistant.components.bsblan
 bsblan==0.4.0
@@ -278,7 +278,7 @@ dynalite_devices==0.1.46
 eebrightbox==0.0.4
 
 # homeassistant.components.elgato
-elgato==0.2.0
+elgato==1.0.0
 
 # homeassistant.components.elkm1
 elkm1-lib==0.8.8
@@ -376,7 +376,7 @@ hangups==0.4.11
 hass-nabucasa==0.38.0
 
 # homeassistant.components.tasmota
-hatasmota==0.1.1
+hatasmota==0.1.2
 
 # homeassistant.components.jewish_calendar
 hdate==0.9.12
@@ -413,7 +413,7 @@ httplib2==0.10.3
 huawei-lte-api==1.4.12
 
 # homeassistant.components.hyperion
-hyperion-py==0.3.0
+hyperion-py==0.6.0
 
 # homeassistant.components.iaqualink
 iaqualink==0.3.4
