@@ -73,8 +73,6 @@ omit =
     homeassistant/components/aurora_abb_powerone/sensor.py
     homeassistant/components/avea/light.py
     homeassistant/components/avion/light.py
-    homeassistant/components/avri/const.py
-    homeassistant/components/avri/sensor.py
     homeassistant/components/azure_devops/__init__.py
     homeassistant/components/azure_devops/const.py
     homeassistant/components/azure_devops/sensor.py
@@ -102,7 +100,12 @@ omit =
     homeassistant/components/bme280/sensor.py
     homeassistant/components/bme680/sensor.py
     homeassistant/components/bmp280/sensor.py
-    homeassistant/components/bmw_connected_drive/*
+    homeassistant/components/bmw_connected_drive/__init__.py
+    homeassistant/components/bmw_connected_drive/binary_sensor.py
+    homeassistant/components/bmw_connected_drive/device_tracker.py
+    homeassistant/components/bmw_connected_drive/lock.py
+    homeassistant/components/bmw_connected_drive/notify.py
+    homeassistant/components/bmw_connected_drive/sensor.py
     homeassistant/components/braviatv/__init__.py
     homeassistant/components/braviatv/const.py
     homeassistant/components/braviatv/media_player.py
@@ -830,8 +833,9 @@ omit =
     homeassistant/components/solaredge_local/sensor.py
     homeassistant/components/solarlog/*
     homeassistant/components/solax/sensor.py
-    homeassistant/components/soma/cover.py
     homeassistant/components/soma/__init__.py
+    homeassistant/components/soma/cover.py
+    homeassistant/components/soma/sensor.py
     homeassistant/components/somfy/*
     homeassistant/components/somfy_mylink/*
     homeassistant/components/sonos/*
