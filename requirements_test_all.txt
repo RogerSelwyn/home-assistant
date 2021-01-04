@@ -245,7 +245,7 @@ datadog==0.15.0
 datapoint==0.9.5
 
 # homeassistant.components.debugpy
-debugpy==1.2.0
+debugpy==1.2.1
 
 # homeassistant.components.ihc
 # homeassistant.components.namecheapdns
@@ -254,7 +254,7 @@ debugpy==1.2.0
 defusedxml==0.6.0
 
 # homeassistant.components.denonavr
-denonavr==0.9.9
+denonavr==0.9.10
 
 # homeassistant.components.devolo_home_control
 devolo-home-control-api==0.16.0
@@ -281,7 +281,7 @@ eebrightbox==0.0.4
 elgato==1.0.0
 
 # homeassistant.components.elkm1
-elkm1-lib==0.8.8
+elkm1-lib==0.8.10
 
 # homeassistant.components.mobile_app
 emoji==0.5.4
@@ -587,9 +587,6 @@ progettihwsw==0.1.1
 # homeassistant.components.prometheus
 prometheus_client==0.7.1
 
-# homeassistant.components.ptvsd
-ptvsd==4.3.2
-
 # homeassistant.components.androidtv
 pure-python-adb[async]==0.3.0.dev0
 
@@ -622,7 +619,7 @@ pyHS100==0.3.5.2
 pyMetno==0.8.1
 
 # homeassistant.components.rfxtrx
-pyRFXtrx==0.26
+pyRFXtrx==0.26.1
 
 # homeassistant.components.tibber
 pyTibber==0.16.0
@@ -719,7 +716,7 @@ pyhaversion==3.4.2
 pyheos==0.7.2
 
 # homeassistant.components.homematic
-pyhomematic==0.1.70
+pyhomematic==0.1.71
 
 # homeassistant.components.icloud
 pyicloud==0.9.7
@@ -811,7 +808,7 @@ pyotgw==1.0b1
 pyotp==2.3.0
 
 # homeassistant.components.openweathermap
-pyowm==3.1.0
+pyowm==3.1.1
 
 # homeassistant.components.onewire
 pyownet==0.10.0.post1
@@ -897,7 +894,7 @@ python-openzwave-mqtt[mqtt-client]==1.4.0
 python-songpal==0.12
 
 # homeassistant.components.tado
-python-tado==0.8.1
+python-tado==0.10.0
 
 # homeassistant.components.twitch
 python-twitch-client==0.6.0
@@ -963,7 +960,7 @@ rokuecp==0.6.0
 roombapy==1.6.2
 
 # homeassistant.components.roon
-roonapi==0.0.28
+roonapi==0.0.30
 
 # homeassistant.components.rpi_power
 rpi-bad-power==0.1.0
@@ -982,7 +979,7 @@ samsungtvws==1.4.0
 sense_energy==0.8.1
 
 # homeassistant.components.sentry
-sentry-sdk==0.19.4
+sentry-sdk==0.19.5
 
 # homeassistant.components.sharkiq
 sharkiqpy==0.1.8
@@ -1031,7 +1028,7 @@ spotipy==2.16.1
 
 # homeassistant.components.recorder
 # homeassistant.components.sql
-sqlalchemy==1.3.20
+sqlalchemy==1.3.22
 
 # homeassistant.components.srp_energy
 srpenergy==1.3.2
@@ -1052,7 +1049,7 @@ stringcase==1.2.0
 sunwatcher==0.2.1
 
 # homeassistant.components.surepetcare
-surepy==0.2.6
+surepy==0.4.0
 
 # homeassistant.components.synology_dsm
 synologydsm-api==1.0.1
@@ -1088,7 +1085,7 @@ twilio==6.32.0
 twinkly-client==0.0.2
 
 # homeassistant.components.upb
-upb_lib==0.4.11
+upb_lib==0.4.12
 
 # homeassistant.components.upcloud
 upcloud-api==0.4.5
