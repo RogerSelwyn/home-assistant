@@ -14,7 +14,13 @@ from homeassistant.helpers import device_registry
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 
-from .const import DATA_CLIENT, DATA_UNSUBSCRIBE, DOMAIN, PLATFORMS
+from .const import (
+    DATA_CLIENT,
+    DATA_UNSUBSCRIBE,
+    DOMAIN,
+    EVENT_DEVICE_ADDED_TO_REGISTRY,
+    PLATFORMS,
+)
 from .discovery import async_discover_values
 from .websocket_api import async_register_api
 
@@ -30,13 +36,14 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 @callback
 def register_node_in_dev_reg(
+    hass: HomeAssistant,
     entry: ConfigEntry,
     dev_reg: device_registry.DeviceRegistry,
     client: ZwaveClient,
     node: ZwaveNode,
 ) -> None:
     """Register node in dev reg."""
-    dev_reg.async_get_or_create(
+    device = dev_reg.async_get_or_create(
         config_entry_id=entry.entry_id,
         identifiers={(DOMAIN, f"{client.driver.controller.home_id}-{node.node_id}")},
         sw_version=node.firmware_version,
@@ -44,6 +51,8 @@ def register_node_in_dev_reg(
         model=node.device_config.label,
         manufacturer=node.device_config.manufacturer,
     )
+
+    async_dispatcher_send(hass, EVENT_DEVICE_ADDED_TO_REGISTRY, device)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -57,12 +66,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         LOGGER.info("Connected to Zwave JS Server")
         if initialized.is_set():
             # update entity availability
-            async_dispatcher_send(hass, f"{DOMAIN}_connection_state")
+            async_dispatcher_send(hass, f"{DOMAIN}_{entry.entry_id}_connection_state")
 
     async def async_on_disconnect() -> None:
         """Handle websocket is disconnected."""
         LOGGER.info("Disconnected from Zwave JS Server")
-        async_dispatcher_send(hass, f"{DOMAIN}_connection_state")
+        async_dispatcher_send(hass, f"{DOMAIN}_{entry.entry_id}_connection_state")
 
     async def async_on_initialized() -> None:
         """Handle initial full state received."""
@@ -75,12 +84,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         LOGGER.debug("Processing node %s", node)
 
         # register (or update) node in device registry
-        register_node_in_dev_reg(entry, dev_reg, client, node)
+        register_node_in_dev_reg(hass, entry, dev_reg, client, node)
 
         # run discovery on all node values and create/update entities
         for disc_info in async_discover_values(node):
             LOGGER.debug("Discovered entity: %s", disc_info)
-            async_dispatcher_send(hass, f"{DOMAIN}_add_{disc_info.platform}", disc_info)
+            async_dispatcher_send(
+                hass, f"{DOMAIN}_{entry.entry_id}_add_{disc_info.platform}", disc_info
+            )
 
     @callback
     def async_on_node_added(node: ZwaveNode) -> None:
@@ -98,7 +109,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         # we do submit the node to device registry so user has
         # some visual feedback that something is (in the process of) being added
-        register_node_in_dev_reg(entry, dev_reg, client, node)
+        register_node_in_dev_reg(hass, entry, dev_reg, client, node)
 
     async def handle_ha_shutdown(event: Event) -> None:
         """Handle HA shutdown."""
